@@ -1,6 +1,7 @@
 #include <Wire.h>
 #include "RTClib.h"
 int umidade;
+String hora, minuto, segundo;
 RTC_DS1307 rtc;
 
 void setup () {
@@ -30,14 +31,13 @@ void setup () {
 }
 
 void loop () {
-
   umidade = analogRead(A0);
 
   DateTime now = rtc.now();
   hora = now.hour();
   minuto = now.minute();
   segundo = now.second();
-  horario = hora + ":" + minuto + ":" + segundo;
+  String horario = hora + ":" + minuto + ":" + segundo;
 //  Serial.print(now.hour()); // Mostra a hora
 //  Serial.print(":");        // mostra separação da hora
 //  Serial.println(now.minute(),DEC);//mostra os minutos
@@ -55,7 +55,7 @@ void loop () {
 
           //Verifica se está no horário do acionamento
 
-  if (( now.hour() == 23 && now.minute() == 28)){
+  if (( now.hour() == 23 && now.minute() == 28)) {
     Serial.println("Ligado");
     digitalWrite(7, HIGH); // Liga pino 7 para acionar o sensor
     if (umidade > 700) {  //Se a umidade for maior que 700 desliga o solenóide
