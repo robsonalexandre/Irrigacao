@@ -1,7 +1,7 @@
 #include <Wire.h>
 #include "RTClib.h"
 int umidade;
-String hora, minuto, segundo;
+String hora, minuto, segundo, str_umidade;
 RTC_DS1307 rtc;
 
 void setup () {
@@ -32,7 +32,7 @@ void setup () {
 
 void loop () {
   umidade = analogRead(A0);
-
+  umidade = map(umidade, 0, 1023, 0, 100);
   DateTime now = rtc.now();
   hora = now.hour();
   minuto = now.minute();
@@ -43,8 +43,8 @@ void loop () {
 //  Serial.println(now.minute(),DEC);//mostra os minutos
   Serial.println(horario);
   //Serial.println(now.year(), DEC); // Mostra anos
-
-  Serial.println(umidade); //Mostra o valor da umidade
+  str_umidade = umidade + "%";
+  Serial.println(str_umidade); //Mostra o valor da umidade
 
     ///////////////////////////////////////////////////////////////////////=
 //////////////////////////////////////////////////////////
@@ -58,10 +58,10 @@ void loop () {
   if (( now.hour() == 23 && now.minute() == 28)) {
     Serial.println("Ligado");
     digitalWrite(7, HIGH); // Liga pino 7 para acionar o sensor
-    if (umidade > 700) {  //Se a umidade for maior que 700 desliga o solenóide
-      digitalWrite(13, LOW);// Desliga o pino 13 do solenoide
+    if (umidade < 35) {  //Se a umidade for maior que 700 desliga o solenóide
+      digitalWrite(13, HIGH);  //Caso a umidade seja menor que 35% liga o pino=13 do solenoide
     } else {
-      digitalWrite(13, HIGH);  //Caso o valor esteja abaixo de 700 liga o pino=13 do solenoide
+      digitalWrite(13, LOW);// Desliga o pino 13 do solenoide
     }
   }
           //Desliga a acionamento na parte da manha
